@@ -1,0 +1,23 @@
+{
+  "name": "rocket-loans",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brianpbond/Rocket-Loans.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brianpbond/Rocket-Loans/issues"
+  },
+  "homepage": "https://github.com/brianpbond/Rocket-Loans#readme",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3"
+  }
+}
