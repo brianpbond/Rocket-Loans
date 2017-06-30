@@ -1,37 +1,62 @@
 <div class="container">
+	<div class="alert alert-danger" role="alert" ng-show="state.error">{{state.errorMessage}}</div>
+    <div class="alert alert-success" role="alert" ng-show="state.success">{{state.successMessage}}</div>
+	<div class="customer-cell row" ng-repeat="customer in allCustomers">
+		<div class="col-sm-8">
+			<ul class="address" ng-hide="state.editingCustomer && state.editingCustomerId === customer.customerId">
+				<li>{{customer.firstName}} {{customer.lastName}}</li>
+				<li>{{customer.address}}</li>
+				<li>{{customer.city}}, {{customer.state}} {{customer.zip}}</li>
+				<li>{{customer.phone | bcTelephone:'format'}}</li>
+			</ul>
+		</div>
+	</div>
 	<div class="row">
-		<form name="createForm" ng-submit="createCustomer(createForm.$valid)" novalidate>
-			<div class="form-group" ng-class="{ 'has-error' : createForm.createFirst.$invalid && createForm.$submitted}">
-				<label class="form-control-label" for="create-first-name">First Name</label>
-				<input type="text" class="form-control" name="createFirst" ng-model="createForm.firstName" id="create-first-name" required />
+		<button type="button" class="btn btn-primary btn-block" ng-click="addCustomer()" ng-hide="state.addingCustomer" ng-disabled="inProgress()">Add A Customer</button>
+	</div>
+	<div class="customer-cell row" ng-show="state.addingCustomer">
+		<form name="createForm" ng-submit="saveCustomer(createForm.$valid)" novalidate>
+			<div class="form-group col-sm-6" ng-class="{ 'has-error' : createForm.createFirst.$invalid && createForm.$submitted}">
+				<label class="control-label" for="create-first-name">First Name</label>
+				<input type="text" class="form-control" name="createFirst" ng-model="createFields.firstName" id="create-first-name" show-focus="state.addingCustomer" required />
 				<div ng-show="createForm.createFirst.$invalid && createForm.$submitted" class="help-block">First name is required.</div>
 			</div>
-			<div class="form-group">
-				<label for="create-last-name">Last Name</label>
-				<input type="text" class="form-control" ng-model="createForm.lastName" id="create-last-name" />
+			<div class="form-group col-sm-6" ng-class="{ 'has-error' : createForm.createLast.$invalid && createForm.$submitted}">
+				<label class="control-label" for="create-last-name">Last Name</label>
+				<input type="text" class="form-control" name="createLast" ng-model="createFields.lastName" id="create-last-name" required />
+				<div ng-show="createForm.createLast.$invalid && createForm.$submitted" class="help-block">Last name is required.</div>
 			</div>
-			<div class="form-group">
-				<label for="create-address">Address</label>
-				<input type="text" class="form-control" ng-model="createForm.address" id="create-address" />
+			<div class="form-group col-xs-12" ng-class="{ 'has-error' : createForm.createAddress.$invalid && createForm.$submitted}">
+				<label class="control-label" for="create-address">Address</label>
+				<input type="text" class="form-control" name="createAddress" ng-model="createFields.address" id="create-address" required />
+				<div ng-show="createForm.createAddress.$invalid && createForm.$submitted" class="help-block">Address is required.</div>
 			</div>
-			<div class="form-group">
-				<label for="create-city">City</label>
-				<input type="text" class="form-control" ng-model="createForm.city" id="create-city" />
+			<div class="form-group col-sm-4" ng-class="{ 'has-error' : createForm.createCity.$invalid && createForm.$submitted}">
+				<label class="control-label" for="create-city">City</label>
+				<input type="text" class="form-control" name="createCity" ng-model="createFields.city" id="create-city" required />
+				<div ng-show="createForm.createCity.$invalid && createForm.$submitted" class="help-block">City is required.</div>
 			</div>
-			<div class="form-group">
-				<label for="create-state">State</label>
-				<input type="text" class="form-control" ng-model="createForm.state" id="create-state" />
+			<div class="form-group col-sm-4" ng-class="{ 'has-error' : createForm.createState.$invalid && createForm.$submitted}">
+				<label class="control-label" for="create-state">State</label>
+				<select id="create-state" name="createState" class="form-control" ng-model="createFields.state" ng-options="s.stateCode as s.stateName for s in useStates" required>
+                    <option value="">Select State</option>
+                </select>
+				
+				<div ng-show="createForm.createState.$invalid && createForm.$submitted" class="help-block">State is required.</div>
 			</div>
-			<div class="form-group">
-				<label for="create-zip">Zip Code</label>
-				<input type="text" class="form-control" ng-model="createForm.zip" id="create-zip" />
+			<div class="form-group col-sm-4" ng-class="{ 'has-error' : createForm.createZip.$invalid && createForm.$submitted}">
+				<label class="control-label" for="create-zip">Zip Code</label>
+				<input type="text" class="form-control" name="createZip" ng-model="createFields.zip" id="create-zip" ng-pattern="/(^\d{5}$)|(^\d{5}-\d{4}$)/" required />
+				<div ng-show="createForm.createZip.$invalid && createForm.$submitted" class="help-block">A valid zip code is required.</div>
 			</div>
-			<div class="form-group">
-				<label for="create-phone">Phone Number</label>
-				<input type="text" class="form-control" ng-model="createForm.phone" id="create-phone" />
+			<div class="form-group col-xs-12" ng-class="{ 'has-error' : createForm.createPhone.$invalid && createForm.$submitted}">
+				<label class="control-label" for="create-phone">Phone Number</label>
+				<input type="text" class="form-control" name="createPhone" ng-model="createFields.phone" id="create-phone" ui-mask="(999) 999-9999" required />
+				<div ng-show="createForm.createPhone.$invalid && createForm.$submitted" class="help-block">Phone number is required.</div>
 			</div>
-			<div class="form-group">
-				<button type="submit" class="btn btn-primary">Create Customer</button>
+			<div class="form-controls-wrap">
+				<button type="submit" class="btn btn-info">Save Customer</button>
+				<button type="button" class="btn btn-primary" ng-click="cancelAction()">Cancel</button>
 			</div>
 		</form>
 	</div>

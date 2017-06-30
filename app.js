@@ -6,6 +6,10 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(bodyParser.json());
+
+app.use(express.static('resources'));
+app.use('/bower_components', express.static( path.join(__dirname, '/bower_components')));
+
 var customers = require('./customers');
 app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname+'/index.html'));
@@ -37,7 +41,7 @@ app.post('/customers', function(req, res){
 	});
 });
 
-app.use(express.static('resources'))
+
 
 app.listen(8081, function () {
   console.log('Listening on port 8081');

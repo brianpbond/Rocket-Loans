@@ -1,4 +1,4 @@
-angular.module('customerApp', [])
+angular.module('customerApp', ['ui.mask','bc.TelephoneFilter'])
 .directive('appMain', function(){
 	return {
 		restrict: 'E',
