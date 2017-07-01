@@ -250,7 +250,11 @@ angular.module('customerApp')
 			loadingAddCustomer: false,
 			customerDeleted: false,
 			editingCustomer: false,
-			editingCustomerId: null
+			editingCustomerId: null,
+			loadingEditCustomer: false,
+			loadingLookupCustomer: false,
+			lookupError: false,
+			lookupErrorMessage: null
 		};
 		$scope.createFields = {};
 		if($scope.createForm){ $scope.createForm.$setPristine(); }
@@ -259,6 +263,9 @@ angular.module('customerApp')
 				$scope.editForms[form].$setPristine();
 			}
 		}
+		$scope.customerLookupData = {};
+		$scope.lookupIdValue = '';
+		if($scope.customerLookupForm){ $scope.customerLookupForm.$setPristine(); }
 	};
 	//initialize state
 	$scope.resetState();
@@ -280,7 +287,7 @@ angular.module('customerApp')
 	
 	$scope.inProgress = function(){
 		var state = $scope.state;
-		return (state.addingCustomer || state.loadingAddCustomer || state.editingCustomer);
+		return (state.addingCustomer || state.loadingAddCustomer || state.editingCustomer || state.loadingLookupCustomer);
 	};
 	$scope.successMessage = function(message){
 		$scope.state.successMessage = message;
@@ -331,6 +338,7 @@ angular.module('customerApp')
 	};
 	
 	$scope.updateCustomer = function(customerId, customerObj){
+		$scope.state.loadingEditCustomer = true;
 		var customerResultDestination = $scope.getCustomerById(customerId);
 		$http.put('/customers/' + customerId, customerObj).then(function successCallback(response){
 			if(response.data && response.data.customerId === customerId){
@@ -416,6 +424,21 @@ angular.module('customerApp')
 			$scope.errorMessage('Unable to delete customer. Please reload and try again.');
 		});
 	};
+	
+	$scope.lookupCustomer = function(isValid){
+		if(isValid){
+			$scope.state.loadingLookupCustomer = true;
+			$http.get('/customers/' + $scope.lookupIdValue).then(function successCallback(response){
+				$scope.resetState();
+				$scope.customerLookupData = response;
+			}, function errorCallback(response){
+				$scope.resetState();
+				$scope.customerLookupData = {};
+				$scope.state.lookupErrorMessage = response.data;
+				$scope.state.lookupError = true;
+			});
+		}
+	}
 	
 	$scope.loadCustomers = function(){
 		$http.get('/customers').then(function successCallback(response){

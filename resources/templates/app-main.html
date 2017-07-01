@@ -65,8 +65,8 @@
 								<span class="help-block" ng-show="editForms[customer.customerId].$submitted && editForms[customer.customerId].phone.$invalid">Phone number is required</span>
 							</div>
 							<div class="form-controls-wrap col-xs-12">
-								<button class="btn btn-info" type="submit">Save Customer</button>
-								<button class="btn btn-primary" type="button" ng-click="cancelAction()">Cancel</button>
+								<button class="btn btn-info" type="submit" ng-disabled="state.loadingEditCustomer"><span ng-hide="state.loadingEditCustomer">Save Customer</span><span ng-show="state.loadingEditCustomer">Saving...</span></button>
+								<button class="btn btn-primary" type="button" ng-disabled="state.loadingEditCustomer" ng-click="cancelAction()">Cancel</button>
 							</div>
 						</div>
 					</form>
@@ -76,7 +76,7 @@
 	</div>
 	<div class="row">
 		<div class="col-xs-12">
-			<button type="button" class="btn btn-info btn-block" ng-click="addCustomer()" ng-hide="state.addingCustomer" ng-disabled="inProgress()">Add A Customer</button>
+			<button type="button" class="btn btn-info btn-block add-customer-btn" ng-click="addCustomer()" ng-hide="state.addingCustomer" ng-disabled="inProgress()">Add A Customer</button>
 		</div>
 	</div>
 	<div class="row">
@@ -129,6 +129,37 @@
 					</div>
 				</form>
 			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<h2 class="h3">Customer Lookup</h2>
+		</div>
+	</div>
+	<div class="row customer-lookup">
+		<form name="customerLookupForm" ng-submit="lookupCustomer(customerLookupForm.$valid)" novalidate>
+			<div class="form-group col-xs-12" ng-class="{ 'has-error' : customerLookupForm.lookupId.$invalid && customerLookupForm.$submitted}">
+				<label for="customer-lookup-id" class="control-label">Customer Id</label>
+				<input type="text" ng-pattern="/^[0-9]*$/" class="form-control" id="customer-lookup-id" name="lookupId" ng-model="lookupIdValue" required />
+				<div ng-show="customerLookupForm.lookupId.$invalid && customerLookupForm.$submitted" class="help-block">A valid customer id is required. Id must be a number.</div>
+			</div>
+			<div class="form-controls-wrap col-xs-12">
+				<button type="submit" class="btn btn-primary" ng-disabled="inProgress()">Retrieve Customer</button>
+			</div>
+		</form>
+	</div>
+	<div class="row customer-lookup-result">
+		<div class="col-xs-12">
+			<div class="customer-cell" ng-show="customerLookupData.data && customerLookupData.data.customerId">
+				<ul class="address">
+					<li>{{customerLookupData.data.firstName}} {{customerLookupData.data.lastName}}</li>
+					<li>{{customerLookupData.data.address}}</li>
+					<li>{{customerLookupData.data.city}}, {{customerLookupData.data.state}} {{customerLookupData.data.zip}}</li>
+					<li>{{customerLookupData.data.phone | bcTelephone:'format'}}</li>
+					<li>Customer Id: {{customerLookupData.data.customerId}}</li>
+				</ul>
+			</div>
+			<div class="alert alert-danger" role="alert" ng-show="state.lookupError">{{state.lookupErrorMessage}}</div>
 		</div>
 	</div>
 </div>

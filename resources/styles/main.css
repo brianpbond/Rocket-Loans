@@ -27,3 +27,9 @@
 .customer-controls-wrap button:first-child {
 	margin-top:0;
 }
+.add-customer-btn {
+	margin-bottom:20px;
+}
+.customer-lookup-result {
+	margin-top:20px;
+}
