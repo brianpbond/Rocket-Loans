@@ -10,7 +10,7 @@
 		<div class="col-xs-12">
 			<div class="customer-cell" ng-repeat="customer in allCustomers">
 				<div class="row" ng-hide="state.editingCustomer && state.editingCustomerId === customer.customerId">
-					<div class="col-sm-8">
+					<div class="col-sm-8 col-xs-12">
 						<ul class="address" ng-hide="state.editingCustomer && state.editingCustomerId === customer.customerId">
 							<li>{{customer.firstName}} {{customer.lastName}}</li>
 							<li>{{customer.address}}</li>
@@ -19,7 +19,7 @@
 							<li>Customer Id: {{customer.customerId}}</li>
 						</ul>
 					</div>
-					<div class="col-sm-4 customer-controls-wrap">
+					<div class="col-sm-4 col-xs-12 customer-controls-wrap">
 						<button type="button" class="btn btn-info" ng-click="editCustomer(customer)" ng-disabled="inProgress()">Edit</button><br>
 						<button type="button" class="btn btn-primary" ng-click="deleteCustomer(customer.customerId)" ng-disabled="inProgress()">Delete</button>
 					</div>
@@ -27,12 +27,12 @@
 				<div ng-show="state.editingCustomer && state.editingCustomerId === customer.customerId">
 					<form name="editForms[{{customer.customerId}}]" ng-submit="saveEditCustomer(editForms[customer.customerId].$valid, customer.customerId)" novalidate>
 						<div class="row">
-							<div class="form-group col-sm-6" ng-class="{true: 'has-error'}[editForms[customer.customerId].$submitted && editForms[customer.customerId].firstName.$invalid]">
+							<div class="form-group col-sm-6 col-xs-12" ng-class="{true: 'has-error'}[editForms[customer.customerId].$submitted && editForms[customer.customerId].firstName.$invalid]">
 								<label class="control-label" for="user-first-name-{{customer.customerId}}">First Name</label>
 								<input class="form-control" type="text" id="user-first-name-{{customer.customerId}}" name="firstName" ng-model="editFields.firstName[customer.customerId]" required show-focus="state.editingCustomer && state.editingCustomerId === customer.customerId" />
 								<span class="help-block" ng-show="editForms[customer.customerId].$submitted && editForms[customer.customerId].firstName.$invalid">First name is required</span>
 							</div>
-							<div class="form-group col-sm-6" ng-class="{true: 'has-error'}[editForms[customer.customerId].$submitted && editForms[customer.customerId].lastName.$invalid]">
+							<div class="form-group col-sm-6 col-xs-12" ng-class="{true: 'has-error'}[editForms[customer.customerId].$submitted && editForms[customer.customerId].lastName.$invalid]">
 								<label class="control-label" for="user-last-name-{{customer.customerId}}">Last Name</label>
 								<input class="form-control" type="text" id="user-last-name-{{customer.customerId}}" name="lastName" ng-model="editFields.lastName[customer.customerId]" required />
 								<span class="help-block" ng-show="editForms[customer.customerId].$submitted && editForms[customer.customerId].lastName.$invalid">Last name is required</span>
@@ -42,19 +42,19 @@
 								<input class="form-control" type="text" id="user-address-{{customer.customerId}}" name="address" ng-model="editFields.address[customer.customerId]" required />
 								<span class="help-block" ng-show="editForms[customer.customerId].$submitted && editForms[customer.customerId].address.$invalid">Address is required</span>
 							</div>
-							<div class="form-group col-sm-4" ng-class="{true: 'has-error'}[editForms[customer.customerId].$submitted && editForms[customer.customerId].city.$invalid]">
+							<div class="form-group col-sm-4 col-xs-12" ng-class="{true: 'has-error'}[editForms[customer.customerId].$submitted && editForms[customer.customerId].city.$invalid]">
 								<label class="control-label" for="user-city-{{customer.customerId}}">City</label>
 								<input class="form-control" type="text" id="user-city-{{customer.customerId}}" name="city" ng-model="editFields.city[customer.customerId]" required />
 								<span class="help-block" ng-show="editForms[customer.customerId].$submitted && editForms[customer.customerId].city.$invalid">City is required</span>
 							</div>
-							<div class="form-group col-sm-4" ng-class="{true: 'has-error'}[editForms[customer.customerId].$submitted && editForms[customer.customerId].state.$invalid]">
+							<div class="form-group col-sm-4 col-xs-12" ng-class="{true: 'has-error'}[editForms[customer.customerId].$submitted && editForms[customer.customerId].state.$invalid]">
 								<label class="control-label" for="state-{{customer.customerId}}">State</label>
 								<select id="state-{{customer.customerId}}" name="state" class="form-control" ng-model="editFields.state[customer.customerId]" ng-options="s.stateCode as s.stateName for s in useStates" required>
 									<option value="">Select State</option>
 								</select>
 								<span class="help-block" ng-show="editForms[customer.customerId].$submitted && editForms[customer.customerId].state.$invalid">State is required</span>
 							</div>
-							<div class="form-group col-sm-4" ng-class="{true: 'has-error'}[editForms[customer.customerId].$submitted && editForms[customer.customerId].zip.$invalid]">
+							<div class="form-group col-sm-4 col-xs-12" ng-class="{true: 'has-error'}[editForms[customer.customerId].$submitted && editForms[customer.customerId].zip.$invalid]">
 								<label class="control-label" for="user-zip-{{customer.customerId}}">Zip Code</label>
 								<input class="form-control" type="text" id="user-zip-{{customer.customerId}}" name="zip" ng-model="editFields.zip[customer.customerId]" ng-pattern="/(^\d{5}$)|(^\d{5}-\d{4}$)/" required />
 								<span class="help-block" ng-show="editForms[customer.customerId].$submitted && editForms[customer.customerId].zip.$invalid">A valid zip code is required</span>
@@ -84,12 +84,12 @@
 			<div class="customer-cell" ng-show="state.addingCustomer">
 				<form name="createForm" ng-submit="saveCustomer(createForm.$valid)" novalidate>
 					<div class="row">
-						<div class="form-group col-sm-6" ng-class="{ 'has-error' : createForm.firstName.$invalid && createForm.$submitted}">
+						<div class="form-group col-sm-6 col-xs-12" ng-class="{ 'has-error' : createForm.firstName.$invalid && createForm.$submitted}">
 							<label class="control-label" for="create-first-name">First Name</label>
 							<input type="text" class="form-control" name="firstName" ng-model="createFields.firstName" id="create-first-name" show-focus="state.addingCustomer" required />
 							<div ng-show="createForm.firstName.$invalid && createForm.$submitted" class="help-block">First name is required.</div>
 						</div>
-						<div class="form-group col-sm-6" ng-class="{ 'has-error' : createForm.lastName.$invalid && createForm.$submitted}">
+						<div class="form-group col-sm-6 col-xs-12" ng-class="{ 'has-error' : createForm.lastName.$invalid && createForm.$submitted}">
 							<label class="control-label" for="create-last-name">Last Name</label>
 							<input type="text" class="form-control" name="lastName" ng-model="createFields.lastName" id="create-last-name" required />
 							<div ng-show="createForm.lastName.$invalid && createForm.$submitted" class="help-block">Last name is required.</div>
@@ -99,12 +99,12 @@
 							<input type="text" class="form-control" name="address" ng-model="createFields.address" id="create-address" required />
 							<div ng-show="createForm.address.$invalid && createForm.$submitted" class="help-block">Address is required.</div>
 						</div>
-						<div class="form-group col-sm-4" ng-class="{ 'has-error' : createForm.city.$invalid && createForm.$submitted}">
+						<div class="form-group col-sm-4 col-xs-12" ng-class="{ 'has-error' : createForm.city.$invalid && createForm.$submitted}">
 							<label class="control-label" for="create-city">City</label>
 							<input type="text" class="form-control" name="city" ng-model="createFields.city" id="create-city" required />
 							<div ng-show="createForm.city.$invalid && createForm.$submitted" class="help-block">City is required.</div>
 						</div>
-						<div class="form-group col-sm-4" ng-class="{ 'has-error' : createForm.state.$invalid && createForm.$submitted}">
+						<div class="form-group col-sm-4 col-xs-12" ng-class="{ 'has-error' : createForm.state.$invalid && createForm.$submitted}">
 							<label class="control-label" for="create-state">State</label>
 							<select id="create-state" name="state" class="form-control" ng-model="createFields.state" ng-options="s.stateCode as s.stateName for s in useStates" required>
 								<option value="">Select State</option>
@@ -112,7 +112,7 @@
 							
 							<div ng-show="createForm.state.$invalid && createForm.$submitted" class="help-block">State is required.</div>
 						</div>
-						<div class="form-group col-sm-4" ng-class="{ 'has-error' : createForm.zip.$invalid && createForm.$submitted}">
+						<div class="form-group col-sm-4 col-xs-12" ng-class="{ 'has-error' : createForm.zip.$invalid && createForm.$submitted}">
 							<label class="control-label" for="create-zip">Zip Code</label>
 							<input type="text" class="form-control" name="zip" ng-model="createFields.zip" id="create-zip" ng-pattern="/(^\d{5}$)|(^\d{5}-\d{4}$)/" required />
 							<div ng-show="createForm.zip.$invalid && createForm.$submitted" class="help-block">A valid zip code is required.</div>
@@ -140,7 +140,7 @@
 		<form name="customerLookupForm" ng-submit="lookupCustomer(customerLookupForm.$valid)" novalidate>
 			<div class="form-group col-xs-12" ng-class="{ 'has-error' : customerLookupForm.lookupId.$invalid && customerLookupForm.$submitted}">
 				<label for="customer-lookup-id" class="control-label">Customer Id</label>
-				<input type="text" ng-pattern="/^[0-9]*$/" class="form-control" id="customer-lookup-id" name="lookupId" ng-model="lookupIdValue" required />
+				<input type="text" ng-pattern="/^[0-9]*$/" class="form-control" id="customer-lookup-id" name="lookupId" ng-disabled="inProgress()" ng-model="lookupIdValue" required />
 				<div ng-show="customerLookupForm.lookupId.$invalid && customerLookupForm.$submitted" class="help-block">A valid customer id is required. Id must be a number.</div>
 			</div>
 			<div class="form-controls-wrap col-xs-12">
