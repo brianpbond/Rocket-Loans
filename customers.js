@@ -1,6 +1,8 @@
 module.exports.getCustomer = getCustomer;
 module.exports.getAllCustomers = getAllCustomers;
 module.exports.addCustomer = addCustomer;
+module.exports.updateCustomer = updateCustomer;
+module.exports.deleteCustomer = deleteCustomer;
 
 var customers = [
 {
@@ -48,14 +50,33 @@ function addCustomer(customerObj, callback){
 	callback(null, customerObj);
 }
 
-function updateCustomer(customerObj, callback){
-	var customerRecord = customers.find(function(obj){
-		return obj.customerId === parseInt(customerObj.customerId);
+function updateCustomer(customerId, customerObj, callback){
+	var customerIndex = customers.findIndex(function(obj){
+		return obj.customerId === customerId;
 	});
-	if(customerRecord){
-		Object.assign(customerRecord, customerObj);
-		callback({ statusCode: 200, message: 'Customer updated.'});
+	if(customerIndex > -1){
+		var valid = customerObj.firstName && customerObj.lastName && customerObj.address && customerObj.city && customerObj.state && customerObj.zip && customerObj.phone;
+		if(valid){
+			var newCustomerObj = Object.assign({},customerObj);
+			newCustomerObj.customerId = customerId;
+			customers[customerIndex] = newCustomerObj;
+			callback(null, customers[customerIndex]);
+		} else {
+			callback({ statusCode: 400, message: 'Invalid request.'});
+		}
 	} else {
+		callback({ statusCode: 404, message: 'Customer not found'});
+	}
+}
+
+function deleteCustomer(customerId, callback){
+	var customerIndex = customers.findIndex(function(obj){
+		return obj.customerId === customerId;
+	});
+	if(customerIndex > -1){
+		customers.splice(customerIndex,1);
+		callback(null, 'Customer deleted.');
+	} else {	
 		callback({ statusCode: 404, message: 'Customer not found'});
 	}
 }

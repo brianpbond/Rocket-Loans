@@ -320,6 +320,33 @@ angular.module('customerApp')
 		}
 	};
 	
+	$scope.getCustomerById = function(customerId){
+		var customers = $scope.allCustomers;
+		for(var i=0; i<customers.length; i++){
+			if(customers[i].customerId === customerId){
+				return customers[i];
+			}
+		}
+		return false;
+	};
+	
+	$scope.updateCustomer = function(customerId, customerObj){
+		var customerResultDestination = $scope.getCustomerById(customerId);
+		$http.put('/customers/' + customerId, customerObj).then(function successCallback(response){
+			if(response.data && response.data.customerId === customerId){
+				angular.extend(customerResultDestination, response.data);
+				$scope.resetState();
+				$scope.successMessage('Customer updated.');
+			} else {
+				$scope.resetState();
+				$scope.errorMessage('Unable to update customer. Please reload and try again.');
+			}
+		}, function errorCallback(response){
+			$scope.resetState();
+			$scope.errorMessage('Unable to update customer. Please reload and try again.');
+		});
+	};
+	
 	$scope.editCustomer = function(currentCustomer){
 		var customerId = currentCustomer.customerId;
 		$scope.resetState();
@@ -332,6 +359,62 @@ angular.module('customerApp')
 		$scope.editFields.state[customerId] = currentCustomer.state;
 		$scope.editFields.zip[customerId] = currentCustomer.zip;
 		$scope.editFields.phone[customerId] = currentCustomer.phone;
+	};
+	
+	$scope.saveEditCustomer = function(valid, customerId){
+		if(valid){
+			var currentCustomer = $scope.getCustomerById(customerId);
+			var newCustomerObj = {
+				'firstName': $scope.editFields.firstName[customerId],
+				'lastName': $scope.editFields.lastName[customerId],
+				'address': $scope.editFields.address[customerId],
+				'city': $scope.editFields.city[customerId],
+				'state': $scope.editFields.state[customerId],
+				'zip': $scope.editFields.zip[customerId],
+				'phone': $scope.editFields.phone[customerId]
+			};
+			$scope.updateCustomer(customerId, newCustomerObj);
+		}
+	};
+	
+	$scope.removeCustomerFromList = function(customerId){
+		var allCustomers = $scope.allCustomers;
+		for(var i=0; i<allCustomers.length; i++){
+			if(allCustomers[i].customerId === customerId){
+				allCustomers.splice(i,1);
+				break;
+			}
+		}
+	};
+	
+	$scope.setCustomerDeleteUndo = function(address){
+		$scope.undoData.customerDelete = address;
+	};
+	
+	$scope.undoDeleteCustomer = function(){
+		var address = $scope.undoData.customerDelete;
+		if(address){
+			$scope.saveCustomer(true, address);
+		} else {
+			$scope.resetState();
+			$scope.errorMessage('Unable to undo delete.');
+		}
+	};
+	
+	$scope.deleteCustomer = function(customerId){
+		$scope.resetState();
+		var customerObj = $scope.getCustomerById(customerId);
+		$http.delete('/customers/' + customerId).then(function successCallback(response) {
+			$scope.resetState();
+			if(customerObj){
+				$scope.setCustomerDeleteUndo(customerObj);
+			}
+			$scope.state.customerDeleted = true;
+			$scope.removeCustomerFromList(customerId);
+		}, function errorCallback(response) {
+			$scope.resetState();
+			$scope.errorMessage('Unable to delete customer. Please reload and try again.');
+		});
 	};
 	
 	$scope.loadCustomers = function(){

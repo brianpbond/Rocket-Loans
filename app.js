@@ -16,7 +16,7 @@ app.get('/', function (req, res) {
 });
 
 app.get('/customers/:customerId', function(req, res){
-	customers.getCustomer(req.params.customerId, function(err, response){
+	customers.getCustomer(parseInt(req.params.customerId), function(err, response){
 		if(err){
 			res.status(err.statusCode).send(err.message);
 		} else {
@@ -37,6 +37,32 @@ app.get('/customers', function(req, res){
 
 app.post('/customers', function(req, res){
 	customers.addCustomer(req.body, function(err, response){
+		if(err){
+			res.status(err.statusCode).send(err.message);
+		} else {
+			res.send(response);
+		}
+	});
+});
+
+app.put('/customers/:customerId', function(req, res){
+	if(req.body && req.params.customerId){
+		var customerId = parseInt(req.params.customerId);
+		customers.updateCustomer(customerId, req.body, function(err, response){
+			if(err){
+			res.status(err.statusCode).send(err.message);
+			} else {
+				res.send(response);
+			}
+		});
+	} else {
+		res.status(400).send('Invalid Request.');
+	}
+});
+
+app.delete('/customers/:customerId', function(req, res){
+	var customerId = parseInt(req.params.customerId);
+	customers.deleteCustomer(customerId, function(err, response){
 		if(err){
 			res.status(err.statusCode).send(err.message);
 		} else {

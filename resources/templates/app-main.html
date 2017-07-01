@@ -3,6 +3,7 @@
 		<div class="col-xs-12">
 			<div class="alert alert-danger" role="alert" ng-show="state.error">{{state.errorMessage}}</div>
 			<div class="alert alert-success" role="alert" ng-show="state.success">{{state.successMessage}}</div>
+			<div class="alert alert-warning" role="alert" ng-show="state.customerDeleted"><span ng-show="!state.loadingAddCustomer">Customer removed. <a href="" ng-click="undoDeleteCustomer()">Undo</a></span><span ng-show="state.loadingAddCustomer">Loading...</span></div>
 		</div>
 	</div>
 	<div class="row">
@@ -20,7 +21,7 @@
 					</div>
 					<div class="col-sm-4 customer-controls-wrap">
 						<button type="button" class="btn btn-info" ng-click="editCustomer(customer)" ng-disabled="inProgress()">Edit</button><br>
-						<button type="button" class="btn btn-primary" ng-disabled="inProgress()">Delete</button>
+						<button type="button" class="btn btn-primary" ng-click="deleteCustomer(customer.customerId)" ng-disabled="inProgress()">Delete</button>
 					</div>
 				</div>
 				<div ng-show="state.editingCustomer && state.editingCustomerId === customer.customerId">
