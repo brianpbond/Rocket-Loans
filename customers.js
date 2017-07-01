@@ -2,7 +2,7 @@ module.exports.getCustomer = getCustomer;
 module.exports.getAllCustomers = getAllCustomers;
 module.exports.addCustomer = addCustomer;
 
-let customers = [
+var customers = [
 {
 	'customerId': 1,
 	'firstName': 'Jon',
@@ -24,14 +24,16 @@ let customers = [
 	'phone': '9876543210'
 }
 ];
-let availableId = 3;
+var availableId = 3;
 
 function getCustomer(customerId, callback){
-	const customerRecord = customers.find(custObj => custObj.customerId === parseInt(customerId));
+	var customerRecord = customers.find(function(obj){
+		return obj.customerId === parseInt(customerId);
+	});
 	if(customerRecord){
 		callback(null, customerRecord);
 	} else {
-		callback('Customer not found');
+		callback({ statusCode: 404, message: 'Customer not found'});
 	}
 }
 
@@ -44,4 +46,16 @@ function addCustomer(customerObj, callback){
 	availableId++;
 	customers.push(customerObj);
 	callback(null, customerObj);
+}
+
+function updateCustomer(customerObj, callback){
+	var customerRecord = customers.find(function(obj){
+		return obj.customerId === parseInt(customerObj.customerId);
+	});
+	if(customerRecord){
+		Object.assign(customerRecord, customerObj);
+		callback({ statusCode: 200, message: 'Customer updated.'});
+	} else {
+		callback({ statusCode: 404, message: 'Customer not found'});
+	}
 }

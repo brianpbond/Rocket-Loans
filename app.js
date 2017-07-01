@@ -18,7 +18,7 @@ app.get('/', function (req, res) {
 app.get('/customers/:customerId', function(req, res){
 	customers.getCustomer(req.params.customerId, function(err, response){
 		if(err){
-			res.send(err);
+			res.status(err.statusCode).send(err.message);
 		} else {
 			res.send(response);
 		}
@@ -28,7 +28,7 @@ app.get('/customers/:customerId', function(req, res){
 app.get('/customers', function(req, res){
 	customers.getAllCustomers(function(err, response){
 		if(err){
-			res.status(500).send('Server Error');
+			res.status(err.statusCode).send(err.message);
 		} else {
 			res.send(response);
 		}
@@ -37,7 +37,11 @@ app.get('/customers', function(req, res){
 
 app.post('/customers', function(req, res){
 	customers.addCustomer(req.body, function(err, response){
-		res.send(response);
+		if(err){
+			res.status(err.statusCode).send(err.message);
+		} else {
+			res.send(response);
+		}
 	});
 });
 

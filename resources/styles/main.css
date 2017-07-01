@@ -1,6 +1,6 @@
 .customer-cell {
 	border:1px solid #d0d0d0;
-	padding:15px 0;
+	padding:15px;
 	margin-bottom:20px;
 }
 .customer-cell .address {
@@ -10,11 +10,20 @@
 }
 .form-controls-wrap {
 	text-align:right;
-	margin: 0 15px;
 }
 .form-controls-wrap button {
 	margin-left:5px;
 }
 .form-controls-wrap button:first-child {
 	margin-left:0;
+}
+.customer-controls-wrap {
+	text-align:right;
+}
+.customer-controls-wrap button {
+	margin-top:5px;
+	width:100px;
+}
+.customer-controls-wrap button:first-child {
+	margin-top:0;
 }

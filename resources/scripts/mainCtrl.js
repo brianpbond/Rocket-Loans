@@ -320,6 +320,20 @@ angular.module('customerApp')
 		}
 	};
 	
+	$scope.editCustomer = function(currentCustomer){
+		var customerId = currentCustomer.customerId;
+		$scope.resetState();
+		$scope.state.editingCustomer = true;
+		$scope.state.editingCustomerId = customerId;
+		$scope.editFields.firstName[customerId] = currentCustomer.firstName;
+		$scope.editFields.lastName[customerId] = currentCustomer.lastName;
+		$scope.editFields.address[customerId] = currentCustomer.address;
+		$scope.editFields.city[customerId] = currentCustomer.city;
+		$scope.editFields.state[customerId] = currentCustomer.state;
+		$scope.editFields.zip[customerId] = currentCustomer.zip;
+		$scope.editFields.phone[customerId] = currentCustomer.phone;
+	};
+	
 	$scope.loadCustomers = function(){
 		$http.get('/customers').then(function successCallback(response){
 			var customerArray = response.data;
