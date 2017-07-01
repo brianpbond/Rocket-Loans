@@ -4,6 +4,7 @@ module.exports.addCustomer = addCustomer;
 module.exports.updateCustomer = updateCustomer;
 module.exports.deleteCustomer = deleteCustomer;
 
+//initial customer data for 'getAllCustomers'
 var customers = [
 {
 	'customerId': 1,
@@ -26,9 +27,11 @@ var customers = [
 	'phone': '9876543210'
 }
 ];
+//unique customer id
 var availableId = 3;
 
 function getCustomer(customerId, callback){
+	//find customer by customerId
 	var customerRecord = customers.find(function(obj){
 		return obj.customerId === parseInt(customerId);
 	});
@@ -45,20 +48,25 @@ function getAllCustomers(callback){
 
 function addCustomer(customerObj, callback){
 	customerObj.customerId = availableId;
+	//shift customer id available upon adding a customer
 	availableId++;
 	customers.push(customerObj);
 	callback(null, customerObj);
 }
 
 function updateCustomer(customerId, customerObj, callback){
+	//finding the index allows us to replace the entire object for our PUT
 	var customerIndex = customers.findIndex(function(obj){
 		return obj.customerId === customerId;
 	});
 	if(customerIndex > -1){
 		var valid = customerObj.firstName && customerObj.lastName && customerObj.address && customerObj.city && customerObj.state && customerObj.zip && customerObj.phone;
 		if(valid){
+			//create new object
 			var newCustomerObj = Object.assign({},customerObj);
+			//make sure customerId carries over
 			newCustomerObj.customerId = customerId;
+			//insert object into customer array in place of the old object
 			customers[customerIndex] = newCustomerObj;
 			callback(null, customers[customerIndex]);
 		} else {
@@ -70,10 +78,12 @@ function updateCustomer(customerId, customerObj, callback){
 }
 
 function deleteCustomer(customerId, callback){
+	//find index allows us to remove the customer
 	var customerIndex = customers.findIndex(function(obj){
 		return obj.customerId === customerId;
 	});
 	if(customerIndex > -1){
+		//splice to remove customer
 		customers.splice(customerIndex,1);
 		callback(null, 'Customer deleted.');
 	} else {	

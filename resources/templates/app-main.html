@@ -123,8 +123,8 @@
 							<div ng-show="createForm.phone.$invalid && createForm.$submitted" class="help-block">Phone number is required.</div>
 						</div>
 						<div class="form-controls-wrap col-xs-12">
-							<button type="submit" class="btn btn-info">Add Customer</button>
-							<button type="button" class="btn btn-primary" ng-click="cancelAction()">Cancel</button>
+							<button type="submit" class="btn btn-info" ng-disabled="state.loadingAddCustomer"><span ng-hide="state.loadingAddCustomer">Add Customer</span><span ng-show="state.loadingAddCustomer">Adding...</span></button>
+							<button type="button" class="btn btn-primary" ng-click="cancelAction()" ng-disabled="state.loadingAddCustomer">Cancel</button>
 						</div>
 					</div>
 				</form>

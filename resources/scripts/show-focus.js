@@ -1,3 +1,4 @@
+//directive to show scope when items become visible
 angular.module('customerApp').directive('showFocus', function($timeout) {
 	return {
 		restrict: 'A',

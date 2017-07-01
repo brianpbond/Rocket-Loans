@@ -1,5 +1,6 @@
 angular.module('customerApp')
 .controller('mainCtrl', function($scope, $http, $filter){
+	//state data for select menus
 	$scope.useStates = [
 		{
 			"stateName": "Alabama",
@@ -267,6 +268,7 @@ angular.module('customerApp')
 		$scope.lookupIdValue = '';
 		if($scope.customerLookupForm){ $scope.customerLookupForm.$setPristine(); }
 	};
+	
 	//initialize state
 	$scope.resetState();
 	
@@ -283,12 +285,17 @@ angular.module('customerApp')
 		phone: {}
 	};
 	$scope.createForm = {};
+	
+	//front end record of customer data
 	$scope.allCustomers = [];
 	
+	//only allow one action at a time
 	$scope.inProgress = function(){
 		var state = $scope.state;
 		return (state.addingCustomer || state.loadingAddCustomer || state.editingCustomer || state.loadingLookupCustomer);
 	};
+	
+	//bootstrap alerts
 	$scope.successMessage = function(message){
 		$scope.state.successMessage = message;
 		$scope.state.success = true;
@@ -301,11 +308,13 @@ angular.module('customerApp')
 		$scope.resetState();
 	}
 	
+	//open add customer form
 	$scope.addCustomer = function(){
 		$scope.resetState();
 		$scope.state.addingCustomer = true;
 	}
 	
+	//check add customer data and update if valid
 	$scope.saveCustomer = function(isValid, newCustomer){
 		var customer = newCustomer ? newCustomer : $scope.createFields;
 		if(isValid){
@@ -313,6 +322,7 @@ angular.module('customerApp')
 			$http.post('/customers', customer).then(function successCallback(response){
 				if(response.data && response.data.customerId){
 					var newCustomer = angular.extend({},response.data);
+					//keep track of new customer on the front end
 					$scope.allCustomers.push(newCustomer);
 					$scope.resetState();
 					$scope.successMessage('Customer added.');
@@ -327,6 +337,7 @@ angular.module('customerApp')
 		}
 	};
 	
+	//find customer in front end data by id
 	$scope.getCustomerById = function(customerId){
 		var customers = $scope.allCustomers;
 		for(var i=0; i<customers.length; i++){
@@ -337,11 +348,13 @@ angular.module('customerApp')
 		return false;
 	};
 	
+	//send put to update customer entry
 	$scope.updateCustomer = function(customerId, customerObj){
 		$scope.state.loadingEditCustomer = true;
 		var customerResultDestination = $scope.getCustomerById(customerId);
 		$http.put('/customers/' + customerId, customerObj).then(function successCallback(response){
 			if(response.data && response.data.customerId === customerId){
+				//also update front end customer data
 				angular.extend(customerResultDestination, response.data);
 				$scope.resetState();
 				$scope.successMessage('Customer updated.');
@@ -355,11 +368,13 @@ angular.module('customerApp')
 		});
 	};
 	
+	//open edit customer form
 	$scope.editCustomer = function(currentCustomer){
 		var customerId = currentCustomer.customerId;
 		$scope.resetState();
 		$scope.state.editingCustomer = true;
 		$scope.state.editingCustomerId = customerId;
+		//populate form with current data
 		$scope.editFields.firstName[customerId] = currentCustomer.firstName;
 		$scope.editFields.lastName[customerId] = currentCustomer.lastName;
 		$scope.editFields.address[customerId] = currentCustomer.address;
@@ -369,6 +384,7 @@ angular.module('customerApp')
 		$scope.editFields.phone[customerId] = currentCustomer.phone;
 	};
 	
+	//check edit form and save if valid
 	$scope.saveEditCustomer = function(valid, customerId){
 		if(valid){
 			var currentCustomer = $scope.getCustomerById(customerId);
@@ -385,6 +401,7 @@ angular.module('customerApp')
 		}
 	};
 	
+	//remove customer from front end data
 	$scope.removeCustomerFromList = function(customerId){
 		var allCustomers = $scope.allCustomers;
 		for(var i=0; i<allCustomers.length; i++){
@@ -395,10 +412,12 @@ angular.module('customerApp')
 		}
 	};
 	
+	//keep track of last delete for undo
 	$scope.setCustomerDeleteUndo = function(address){
 		$scope.undoData.customerDelete = address;
 	};
 	
+	//undo last delete
 	$scope.undoDeleteCustomer = function(){
 		var address = $scope.undoData.customerDelete;
 		if(address){
@@ -409,12 +428,14 @@ angular.module('customerApp')
 		}
 	};
 	
+	//delete a customer by id
 	$scope.deleteCustomer = function(customerId){
 		$scope.resetState();
 		var customerObj = $scope.getCustomerById(customerId);
 		$http.delete('/customers/' + customerId).then(function successCallback(response) {
 			$scope.resetState();
 			if(customerObj){
+				//store customer data temporarily for undo
 				$scope.setCustomerDeleteUndo(customerObj);
 			}
 			$scope.state.customerDeleted = true;
@@ -425,11 +446,13 @@ angular.module('customerApp')
 		});
 	};
 	
+	//get customer by customerId
 	$scope.lookupCustomer = function(isValid){
 		if(isValid){
 			$scope.state.loadingLookupCustomer = true;
 			$http.get('/customers/' + $scope.lookupIdValue).then(function successCallback(response){
 				$scope.resetState();
+				//display customer data
 				$scope.customerLookupData = response;
 			}, function errorCallback(response){
 				$scope.resetState();
@@ -440,6 +463,7 @@ angular.module('customerApp')
 		}
 	}
 	
+	//get all customer data
 	$scope.loadCustomers = function(){
 		$http.get('/customers').then(function successCallback(response){
 			var customerArray = response.data;
@@ -455,5 +479,6 @@ angular.module('customerApp')
 			$scope.errorMessage('Unable to load customer information. Please wait a moment and reload.');
 		});
 	};
+	//load all customer data on start
 	$scope.loadCustomers();
 });
