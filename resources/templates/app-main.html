@@ -1,6 +1,8 @@
 <div class="container">
-	<div class="alert alert-danger" role="alert" ng-show="state.error">{{state.errorMessage}}</div>
-    <div class="alert alert-success" role="alert" ng-show="state.success">{{state.successMessage}}</div>
+	<div class="row">
+		<div class="alert alert-danger" role="alert" ng-show="state.error">{{state.errorMessage}}</div>
+		<div class="alert alert-success" role="alert" ng-show="state.success">{{state.successMessage}}</div>
+	</div>
 	<div class="customer-cell row" ng-repeat="customer in allCustomers">
 		<div class="col-sm-8">
 			<ul class="address" ng-hide="state.editingCustomer && state.editingCustomerId === customer.customerId">
@@ -55,7 +57,7 @@
 				<div ng-show="createForm.createPhone.$invalid && createForm.$submitted" class="help-block">Phone number is required.</div>
 			</div>
 			<div class="form-controls-wrap">
-				<button type="submit" class="btn btn-info">Save Customer</button>
+				<button type="submit" class="btn btn-info">Add Customer</button>
 				<button type="button" class="btn btn-primary" ng-click="cancelAction()">Cancel</button>
 			</div>
 		</form>
